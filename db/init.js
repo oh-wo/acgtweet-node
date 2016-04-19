@@ -13,9 +13,17 @@ function init() {
 
 
     if (!db['users']) {
+        console.log('Installing database.')
         // Call install.sql.
         db.install(function (err, db) {
+            if (err) {
+                console.log('error: ', err)
+            } else {
+                console.log('Database installed.')
+            }
         });
+    } else {
+        console.log('db already installed.')
     }
 
     return db;

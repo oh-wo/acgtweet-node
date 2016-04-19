@@ -1,22 +1,26 @@
-DROP SCHEMA public CASCADE;
+DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA public;
 
--- Copied directly from the `node-connect-pg-simple` repository.
--- @see https://github.com/voxpelli/node-connect-pg-simple/blob/master/table.sql
-CREATE TABLE sessions (
-  -- Columns must be named thus for compatibility with connect-pg-simple.
-  sid     TEXT         NOT NULL,
-  expire  TIMESTAMP(6) NOT NULL,
-  created TIMESTAMP(6) NOT NULL DEFAULT current_timestamp,
-  sess    JSON         NOT NULL
-)
-WITH (OIDS = FALSE
+CREATE TABLE oauth_tokens (
+  id                       UUID                        NOT NULL,
+  access_token             TEXT                        NOT NULL,
+  access_token_expires_on  TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  client_id                TEXT                        NOT NULL,
+  refresh_token            TEXT                        NOT NULL,
+  refresh_token_expires_on TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  user_id                  UUID                        NOT NULL
 );
-ALTER TABLE sessions
-  ADD CONSTRAINT session_pkey PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+
+CREATE TABLE oauth_clients (
+  client_id     TEXT NOT NULL,
+  client_secret TEXT NOT NULL,
+  redirect_uri  TEXT NOT NULL
+);
+ALTER TABLE oauth_clients ADD CONSTRAINT oauth_clients_pkey PRIMARY KEY (client_id, client_secret);
 
 CREATE TABLE users (
-  id       SERIAL PRIMARY KEY,
+  id       UUID PRIMARY KEY,
   email    TEXT NOT NULL,
   password TEXT NOT NULL
 );
+CREATE INDEX users_username_password ON users USING BTREE (email, password);
