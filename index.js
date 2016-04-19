@@ -4,13 +4,14 @@ var bodyParser = require('body-parser');
 var session = require('./session.js');
 var oauthServer = require('oauth2-server');
 
+require('./db/init');
 
 start();
 
 function start() {
     var app = express();
 
-    require('./db/init');
+
 
     var port = process.env.PORT || 3000;
 

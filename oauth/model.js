@@ -19,12 +19,10 @@ module.exports = {
     /**
      * Get client.
      */
-    getClient: function (clientId, clientId, done) {
+    getClient: function (clientId, clientSecret, done) {
         console.log('getClient called')
-        // TODO Implement.
 
-        var error = false;
-        done(error, 'works!');
+        done(false, {clientId: clientId, clientSecret: clientSecret});
     },
 
     /**
@@ -40,11 +38,7 @@ module.exports = {
      * Get user.
      */
     getUser: function (email, password, done) {
-
-        done(false, {
-            username: 'obodley@gmail.com'
-        })
-
+        db.users.findOne({email: email, password: password}, done);
     },
 
     /**
@@ -52,23 +46,38 @@ module.exports = {
      */
     saveAccessToken: function (accessToken, clientId, expires, user, done) {
         console.log('saveAccessToken called', accessToken, clientId, expires, user);
+        db.oauth_tokens.insert({
+            access_token: accessToken,
+            access_token_expires_on: expires,
+            client_id: clientId,
+            user_id: user.id
+        }, function (err, res) {
+            error = err;
+            console.log('err', err);
+            done(err)
+        });
 
-        var error = false;
-        done(error)
     },
 
+    /**
+     * Save refresh token, called directly after creating the access token is saved.
+     */
     saveRefreshToken: function (refreshToken, clientId, expires, user, done) {
         console.log('saveRefreshToken called', refreshToken, clientId, expires, user);
 
-        var error = false;
-        done(error)
+        db.oauth_tokens.update({client_id: clientId}, {
+            refresh_token: refreshToken,
+            refresh_token_expires_on: expires
+        }, function (err, oauth_token) {
+            done(err)
+        })
     },
 
     grantTypeAllowed: function (clientId, grantType, done) {
+        // Accept all grant types.
         var allowed = true;
         var error = false;
         done(error, allowed);
     }
-
 }
 ;

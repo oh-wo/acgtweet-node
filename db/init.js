@@ -12,7 +12,7 @@ function init() {
     console.log('Connected to database.');
 
 
-    if (!db['users']) {
+    if (!db['oauth_clients']) {
         console.log('Installing database.')
         // Call install.sql.
         db.install(function (err, db) {
