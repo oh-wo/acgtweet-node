@@ -19,8 +19,9 @@ CREATE TABLE oauth_tokens (
   refresh_token_expires_on TIMESTAMP WITHOUT TIME ZONE,
   user_id                  INT
 );
-ALTER TABLE oauth_tokens ADD CONSTRAINT  oauth_tokens__users_id
-  FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE oauth_tokens
+  ADD CONSTRAINT oauth_tokens__users_fk
+FOREIGN KEY (user_id) REFERENCES users (id);
 
 CREATE TABLE oauth_clients (
   client_id     TEXT NOT NULL,
@@ -31,5 +32,13 @@ ALTER TABLE oauth_clients
   ADD CONSTRAINT oauth_clients_pkey PRIMARY KEY (client_id, client_secret);
 
 
-insert into users (email,password) values ('owen@biomatters.com','password');
+INSERT INTO users (email, password) VALUES ('owen@biomatters.com', 'password');
 
+CREATE TABLE sequences (
+  id        SERIAL PRIMARY KEY,
+  content   TEXT NOT NULL,
+  author_id INT
+);
+ALTER TABLE sequences
+  ADD CONSTRAINT sequence_author_fk
+FOREIGN KEY (author_id) REFERENCES users (id);

@@ -1,16 +1,15 @@
 var express = require('express');
 var user = express(); // the sub app
 
-user.get('/:userId/', function (req, res) {
+user.get('/:userId/', global.oauth.authorise(), function (req, res) {
 
-    console.log(req.session);
-    req.session.userId = req.params.userId;
+    console.log(req)
 
     // TODO return user.
     res.send('User id: ' + req.params.userId);
 });
 
-user.put('/:userId', function (req, res) {
+user.put('/:userId', global.oauth.authorise(), function (req, res) {
     // TODO update user.
     res.send('user ' + req.params.userId + ' updated');
 });
