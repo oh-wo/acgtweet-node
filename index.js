@@ -12,7 +12,6 @@ function start() {
     var app = express();
 
 
-
     var port = process.env.PORT || 3000;
 
     // Enable url encoded posts.
@@ -23,9 +22,13 @@ function start() {
 
 
     // Initialize the oAuth sever, passing in our custom model options.
+    var oneYear = 60 * 60 * 24 * 7 * 52;
     var oauth = new oauthServer({
         model: require('./oauth/model'),
-        grants: ['password', 'refresh_token']
+        grants: ['password', 'refresh_token'],
+        // Attempt to set to one year.
+        accessTokenLifetime: oneYear,
+        refreshTokenLifetime: oneYear
     });
 
     app.post('/oauth/token', oauth.grant());

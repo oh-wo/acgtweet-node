@@ -4,23 +4,24 @@
 module.exports = {
     /*
      * Get access token.
+     * @param bearerToken {String} is an access token, could also be refresh perhaps??
      */
-    getAccessToken: function (bearerToken) {
-        console.log('getAccessToken called')
-        // TODO Implement.
-        return {
-            accessToken: 50,
-            clientId: 10,
-            expires: new Date(),
-            userId: 1
-        }
+    getAccessToken: function (bearerToken, done) {
+
+        db.oauth_tokens.findOne({access_token: bearerToken}, function (err, oauthToken) {
+            console.log('found oauth:', oauthToken);
+
+            oauthToken.expires = oauthToken.access_token_expires_on;
+
+            done(err, oauthToken)
+        });
     },
 
     /**
      * Get client.
      */
     getClient: function (clientId, clientSecret, done) {
-        console.log('getClient called')
+        // TODO Save client id and secrets to the database. For now any id / secret over 3 characters will work.
 
         done(false, {clientId: clientId, clientSecret: clientSecret});
     },
