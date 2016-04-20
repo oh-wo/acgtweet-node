@@ -8,12 +8,15 @@ module.exports = {
      */
     getAccessToken: function (bearerToken, done) {
 
-        db.oauth_tokens.findOne({access_token: bearerToken}, function (err, oauthToken) {
-            console.log('found oauth:', oauthToken);
+        db.oauth_tokens.findOne({access_token: bearerToken}, function (err, token) {
+            console.log('found oauth:', token);
 
-            oauthToken.expires = oauthToken.access_token_expires_on;
+            if (token) {
+                token.expires = token.access_token_expires_on;
+                token.userId = token.user_id;
+            }
 
-            done(err, oauthToken)
+            done(err, token)
         });
     },
 
@@ -39,7 +42,10 @@ module.exports = {
      * Get user.
      */
     getUser: function (email, password, done) {
-        db.users.findOne({email: email, password: password}, done);
+        db.users.findOne({email: email, password: password}, function (err, user) {
+            console.log('getUser:', user);
+            done(err, user);
+        });
     },
 
     /**

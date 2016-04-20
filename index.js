@@ -4,9 +4,11 @@ var bodyParser = require('body-parser');
 var session = require('./session.js');
 var oauthServer = require('oauth2-server');
 
+
 require('./db/init');
 
-start();
+setTimeout(start, 2000);
+
 
 function start() {
     var app = express();

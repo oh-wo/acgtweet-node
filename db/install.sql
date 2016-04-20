@@ -37,8 +37,16 @@ INSERT INTO users (email, password) VALUES ('owen@biomatters.com', 'password');
 CREATE TABLE sequences (
   id        SERIAL PRIMARY KEY,
   content   TEXT NOT NULL,
-  author_id INT
+  author_id INT  NOT NULL
 );
 ALTER TABLE sequences
   ADD CONSTRAINT sequence_author_fk
 FOREIGN KEY (author_id) REFERENCES users (id);
+
+CREATE TABLE shared_sequences (
+  sequenceId INT,
+  userId     INT
+);
+ALTER TABLE shared_sequences
+  ADD CONSTRAINT shared_sequences_pk
+PRIMARY KEY (sequenceId, userId);
