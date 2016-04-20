@@ -4,15 +4,13 @@ var bodyParser = require('body-parser');
 var session = require('./session.js');
 var oauthServer = require('oauth2-server');
 
-
+// Wait for the database to get installed and then start the app.
 require('./db/init');
-
-setTimeout(start, 2000);
-
+start();
 
 function start() {
+    console.log('starting app');
     var app = express();
-
 
     var port = process.env.PORT || 3000;
 
