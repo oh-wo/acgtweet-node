@@ -2,14 +2,13 @@ var express = require('express');
 // var path = require('path');
 var bodyParser = require('body-parser');
 
-
 // Wait for the database to get installed and then start the app.
-require('./db/init');
+require('./app/db/init');
 start();
-
+var app;
 function start() {
     console.log('starting app');
-    var app = express();
+    app = express();
 
     var port = process.env.PORT || 3000;
 
@@ -20,7 +19,7 @@ function start() {
     app.use(bodyParser.json());
 
     // Load the api.
-    app.use('/api/v1', require('./api/api.js'));
+    app.use('/api/v1', require('./app/api/api.js'));
 
     // Homepage so we know the server is working.
     app.get('/', function (req, res) {
@@ -32,3 +31,5 @@ function start() {
         console.log('ACGTweet listening on http://%s:%s', host, port);
     });
 }
+
+module.exports = app;

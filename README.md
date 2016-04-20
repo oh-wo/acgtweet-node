@@ -5,7 +5,8 @@
 - [npm]() (installed with node)
 
 ## Installation
- - `npm install`
+ - to install the web api `npm install`
+ - to run tests `npm install mocha -g`
  
 ## development
 - To start the app locally `node index.js` or to watch and hot reload: `nodemon index.js`
