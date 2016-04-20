@@ -1,5 +1,8 @@
+# Setup test environment for running continuous development through circleci.com
+# @see owen for login details.
 machine:
   node:
+#  es6 features wont work by default, need to override node verion.
     version: 4.2.1
   environment:
    DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test

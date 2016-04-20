@@ -12,7 +12,7 @@ sequence.get('/', function (req, res) {
     var owned = db.promise(done => db.sequences.find({author_id: req.user.id}, done));
 
     // Get sequences shared with this user.
-    var sharedWithUser = db.promise(done => db.run('select * from sequences,shared_sequences where shared_sequences.userid=$1;', [req.user.id], done));
+    var sharedWithUser = db.promise(done => db.run('select * from sequences,shared_sequences where shared_sequences.userid=$1 and shared_sequences.sequenceid=sequences.id;', [req.user.id], done));
 
     Promise.all([owned, sharedWithUser]).then(result => {
         // Combine sequences returned from each promise into a single array.

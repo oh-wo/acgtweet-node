@@ -3,9 +3,11 @@ var massive = require('massive');
 
 // Use a global variable to prevent the database connection being initialized more than once.
 global.db = global.db || init();
-module.exports = global.db;
+// module.exports = global.db;
 
-function init() {
+module.exports = init;
+
+function init(done) {
     // Connect synchronously.
     var connectionString = require('./connectionString');
     var db = massive.connectSync({connectionString, scripts: './app/db/scripts'});
@@ -24,12 +26,20 @@ function init() {
                         console.log('Error preloading database: ', err)
                     } else {
                         console.log('Databse preloaded.')
+                        if (done) {
+                            // Pass the database object back as it will have new properties & methods.
+                            done(db);
+                        }
                     }
                 })
             }
         });
     } else {
         console.log('Database already installed.')
+        if (done) {
+            // For consistency, always pass the database back.
+            done(db);
+        }
     }
 
     /**
