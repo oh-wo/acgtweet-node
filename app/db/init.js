@@ -8,11 +8,11 @@ module.exports = global.db;
 function init() {
     // Connect synchronously.
     var connectionString = require('./connectionString');
-    var db = massive.connectSync({connectionString});
+    var db = massive.connectSync({connectionString, scripts: './app/db/scripts'});
     console.log('Connected to database: ' + connectionString);
 
     if (!db['shared_sequences']) {
-        console.log('Installing database.')
+        console.log('Installing database.');
         // Call install.sql.
         db.install(function (err) {
             if (err) {
