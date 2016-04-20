@@ -1,15 +1,16 @@
 # ACGTweet-node
 
 ## Requirements
-- [node]()
+- [node]() > 4.2.1 (must support es6).
 - [npm]() (installed with node)
 
 ## Installation
- - to install the web api `npm install`
- - to run tests `npm install mocha -g`
+ - To install the web api `npm install`
+ - To run tests `npm install mocha -g`
  
-## development
-- To start the app locally `node index.js` or to watch and hot reload: `nodemon index.js`
+## Development
+- To start the app locally `node index.js`==`npm start`
+- or to watch and hot reload: `nodemon index.js`. You may need to `npm install -g nodemon`.
 
 ## useful psql commands
 - `\list` list all databases
