@@ -1,8 +1,7 @@
 var express = require('express');
 // var path = require('path');
 var bodyParser = require('body-parser');
-var session = require('./session.js');
-var oauthServer = require('oauth2-server');
+
 
 // Wait for the database to get installed and then start the app.
 require('./db/init');
@@ -19,27 +18,6 @@ function start() {
 
     // Parse the JSON body of incoming HTTP requests..
     app.use(bodyParser.json());
-
-
-    // Initialize the oAuth sever, passing in our custom model options.
-    var oneYear = 60 * 60 * 24 * 7 * 52;
-    global.oauth = new oauthServer({
-        model: require('./oauth/model'),
-        grants: ['password', 'refresh_token'],
-        // Attempt to set to one year.
-        accessTokenLifetime: oneYear,
-        refreshTokenLifetime: oneYear
-    });
-
-    app.post('/oauth/token', oauth.grant());
-
-    app.delete('/oauth/token', oauth.grant());
-
-    app.get('/secret', global.oauth.authorise(), function (req, res) {
-        // Will require a valid access_token.
-        res.send('Secret area');
-    });
-
 
     // Load the api.
     app.use('/api/v1', require('./api/api.js'));

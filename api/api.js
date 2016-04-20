@@ -1,6 +1,7 @@
 var express = require('express');
 var api = express(); // the sub app
 
+api.use('/token', require('./token'));
 
 api.use('/user', require('./user'));
 

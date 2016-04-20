@@ -1,6 +1,6 @@
 var express = require('express');
-
 var sequence = express(); // the sub app
+
 
 /**
  * Get all sequences for this user.

@@ -13,11 +13,18 @@ function init() {
     if (!db['shared_sequences']) {
         console.log('Installing database.')
         // Call install.sql.
-        db.install(function (err, db) {
+        db.install(function (err) {
             if (err) {
-                console.log('error: ', err)
+                console.log('Error installing database: ', err)
             } else {
-                console.log('Database installed.')
+                console.log('Database installed.');
+                db.preload(function (err) {
+                    if (err) {
+                        console.log('Error preloading database: ', err)
+                    } else {
+                        console.log('Databse preloaded.')
+                    }
+                })
             }
         });
     } else {

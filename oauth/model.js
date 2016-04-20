@@ -9,13 +9,10 @@ module.exports = {
     getAccessToken: function (bearerToken, done) {
 
         db.oauth_tokens.findOne({access_token: bearerToken}, function (err, token) {
-            console.log('found oauth:', token);
-
             if (token) {
                 token.expires = token.access_token_expires_on;
                 token.userId = token.user_id;
             }
-
             done(err, token)
         });
     },
@@ -32,10 +29,15 @@ module.exports = {
     /**
      * Get refresh token.
      */
-    getRefreshToken: function (bearerToken) {
-        console.log('getRefreshToken called')
-        // TODO Implement.
-        return 50
+    getRefreshToken: function (bearerToken, done) {
+        // TODO Should this return just the
+        db.oauth_tokens.findOne({access_token: bearerToken}, function (err, token) {
+            done(err, {
+                expires: refresh_token_expires_on,
+                token: refresh_token,
+                userId: token.user_id
+            })
+        });
     },
 
     /*
