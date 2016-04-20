@@ -1,12 +1,18 @@
 var express = require('express');
 var user = express(); // the sub app
 
-user.get('/:userId/', global.oauth.authorise(), function (req, res) {
+user.get('/', global.oauth.authorise(), function (req, res) {
 
-    console.log(req)
 
-    // TODO return user.
-    res.send('User id: ' + req.params.userId);
+    db.users.findOne({id: req.user.id}, function (err, user) {
+        if (err) {
+            res.status(406).send('Could not find that user.')
+        } else {
+            delete user.password;
+            console.log('Found user:', user)
+            res.send(user);
+        }
+    });
 });
 
 user.put('/:userId', global.oauth.authorise(), function (req, res) {

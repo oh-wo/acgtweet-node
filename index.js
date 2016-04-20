@@ -33,6 +33,8 @@ function start() {
 
     app.post('/oauth/token', oauth.grant());
 
+    app.delete('/oauth/token', oauth.grant());
+
     app.get('/secret', global.oauth.authorise(), function (req, res) {
         // Will require a valid access_token.
         res.send('Secret area');
