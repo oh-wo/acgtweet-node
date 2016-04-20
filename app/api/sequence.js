@@ -8,17 +8,25 @@ var sequence = express(); // the sub app
 sequence.get('/', function (req, res) {
     console.log('userid', req.user.id)
 
-    // Get sequences this user owns.
-    var owned = db.promise(done => db.sequences.find({author_id: req.user.id}, done));
-
     // Get sequences shared with this user.
-    var sharedWithUser = db.promise(done => db.run('select * from sequences,shared_sequences where shared_sequences.userid=$1 and shared_sequences.sequenceid=sequences.id;', [req.user.id], done));
+    db.promise(done => db.mineAndTheirs(req.user.id, done))
+        .then(all => {
+            var organised = all.map(result => {
+                return {
+                    id: result.id,
+                    content: result.content,
+                    author_id: result.author_id,
+                    ispublic: result.ispublic,
+                    sharedBy: {
+                        first_name: result.first_name,
+                        last_name: result.last_name,
+                        email: result.email
+                    }
+                }
+            });
 
-    Promise.all([owned, sharedWithUser]).then(result => {
-        // Combine sequences returned from each promise into a single array.
-        var all = [].concat.apply([], result);
-        res.send(all);
-    });
+            res.send(organised);
+        });
 });
 
 sequence.post('/', function (req, res) {

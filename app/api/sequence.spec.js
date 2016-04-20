@@ -51,33 +51,51 @@ describe('/api/v1/sequence', function () {
         it('should return all sequences for a user', function (done) {
 
             var expected = [
-                // The following are authored by the current user.
-                {
-                    "author_id": 1,
-                    "content": "acgtagtgctagcatgat",
-                    "id": 1,
-                    "ispublic": true
-                },
-                {
-                    "author_id": 1,
-                    "content": "acgtaatgat",
-                    "id": 2,
-                    "ispublic": false
-                },
-                {
-                    "author_id": 1,
-                    "content": "acgtagtgctagcatgat",
-                    "id": 3,
-                    "ispublic": false
-                },
                 // The following have been shared with the user.
                 {
-                    "author_id": 2,
-                    "content": "acgtattttttttttaaa",
-                    "id": 4,
-                    "ispublic": false,
-                    "sequenceid": 4,
-                    "userid": 1
+                    id: 4,
+                    content: 'acgtattttttttttaaa',
+                    author_id: 2,
+                    ispublic: false,
+                    sharedBy: {
+                        first_name: 'Bob',
+                        last_name: 'Roberts',
+                        email: 'bob@biomatters.com'
+                    }
+                },
+                // The following are authored by the current user.
+                {
+                    id: 2,
+                    content: 'acgtaatgat',
+                    author_id: 1,
+                    ispublic: false,
+                    sharedBy: {
+                        first_name: 'Owen',
+                        last_name: 'Bodley',
+                        email: 'owen@biomatters.com'
+                    }
+                },
+                {
+                    id: 1,
+                    content: 'acgtagtgctagcatgat',
+                    author_id: 1,
+                    ispublic: true,
+                    sharedBy: {
+                        first_name: 'Owen',
+                        last_name: 'Bodley',
+                        email: 'owen@biomatters.com'
+                    }
+                },
+                {
+                    id: 3,
+                    content: 'acgtagtgctagcatgat',
+                    author_id: 1,
+                    ispublic: false,
+                    sharedBy: {
+                        first_name: 'Owen',
+                        last_name: 'Bodley',
+                        email: 'owen@biomatters.com'
+                    }
                 }
             ];
 
