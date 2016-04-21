@@ -12,8 +12,10 @@ global.oauth = new oauthServer({
     refreshTokenLifetime: oneYear
 });
 
-// Login by getting an access token.
 
+/**
+ * Handle errors.
+ */
 token.use(function logErrors(err, req, res, next) {
     console.error('error handled:', err.stack);
     next(err);
@@ -21,15 +23,15 @@ token.use(function logErrors(err, req, res, next) {
 
 token.post('/', oauth.grant());
 
-// TODO Implement the delete method to log out.
-token.delete('/', oauth.grant());
-
-
-token.use(function (err, req, res, next) {
-    if (!err) return next(); // you also need this line
-
-    res.status(err.code).send(err.message);
+token.delete('/', () => {
+    // TODO Delete OAuth sessions.
 });
+
+// token.use(function (err, req, res, next) {
+//     // Pass on to the next handler if exists.
+//     if (!err) return next();
+//     res.status(err.code).send(err.message);
+// });
 
 module.exports = token;
 

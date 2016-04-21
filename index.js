@@ -3,8 +3,12 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 // Wait for the database to get installed and then start the app.
-require('./app/db/init');
-start();
+require('./app/db/init')(_db => {
+    // Refresh database object.
+    global.db = _db;
+    start();
+});
+
 var app;
 function start() {
     console.log('starting app');
