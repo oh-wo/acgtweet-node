@@ -1,6 +1,6 @@
 var express = require('express');
 var sequence = express(); // the sub app
-
+var sequenceHelper = require('./sequenceHelper');
 
 /**
  * Get all sequences for this user.
@@ -9,7 +9,7 @@ sequence.get('/', function (req, res) {
     console.log('userid', req.user.id)
 
     // Get sequences shared with this user.
-    db.promise(done => db.mineAndTheirs(req.user.id, done))
+    db.promise(done => db.mineAndTheirs([req.user.id], done))
         .then(all => {
             var organised = all.map(result => {
                 return {
@@ -25,6 +25,9 @@ sequence.get('/', function (req, res) {
                 }
             });
 
+            if (req.query.sort) {
+                organised = sequenceHelper.sort(organised, req.query.sort);
+            }
             res.send(organised);
         });
 });
