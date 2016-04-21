@@ -1,45 +1,48 @@
 // @see https://github.com/robconery/massive-js
 var massive = require('massive');
+var DA = require('deasync');
 
 // Use a global variable to prevent the database connection being initialized more than once.
 global.db = global.db || init();
 // module.exports = global.db;
 
-module.exports = init;
+module.exports = global.db;
 
-function init(done) {
+function init() {
+    var done = false;
+
+    function wait() {
+        DA.loopWhile(function () {
+            return !done;
+        });
+        done = false;
+    }
+
     // Connect synchronously.
     var connectionString = require('./connectionString');
     var db = massive.connectSync({connectionString, scripts: './app/db/scripts'});
     console.log('Connected to database: ' + connectionString);
-
     if (!db['shared_sequences']) {
-        console.log('Installing database.');
-        // Call install.sql.
+
         db.install(function (err) {
-            if (err) {
-                console.log('Error installing database: ', err)
-            } else {
-                console.log('Database installed.');
-                db.preload(function (err) {
-                    if (err) {
-                        console.log('Error preloading database: ', err)
-                    } else {
-                        console.log('Databse preloaded.')
-                        if (done) {
-                            // Pass the database object back as it will have new properties & methods.
-                            done(db);
-                        }
-                    }
-                })
-            }
+            console.log('Database installed');
+            done = true;
         });
+
+        wait();
+
+        db.preload(function (err) {
+            console.log('Database preloaded.')
+            done = true;
+        });
+
+        wait();
+
+        // Refresh database connection.
+        db = massive.connectSync({connectionString, scripts: './app/db/scripts'});
+
     } else {
         console.log('Database already installed.')
-        if (done) {
-            // For consistency, always pass the database back.
-            done(db);
-        }
     }
 
     /**

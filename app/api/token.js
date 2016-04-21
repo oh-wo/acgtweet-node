@@ -24,7 +24,7 @@ token.use(function logErrors(err, req, res, next) {
 token.post('/', oauth.grant());
 
 token.delete('/', () => {
-    // TODO Delete OAuth sessions.
+    // db.oauth_tokens.destroy({})
 });
 
 // token.use(function (err, req, res, next) {

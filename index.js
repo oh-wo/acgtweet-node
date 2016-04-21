@@ -3,16 +3,11 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 // Wait for the database to get installed and then start the app.
-require('./app/db/init')(_db => {
-    // Refresh database object.
-    global.db = _db;
-    start();
-});
+require('./app/db/init');
 
-var app;
 function start() {
     console.log('starting app');
-    app = express();
+    var app = express();
 
     var port = process.env.PORT || 3000;
 
@@ -34,6 +29,7 @@ function start() {
         var host = server.address().address;
         console.log('ACGTweet listening on http://%s:%s', host, port);
     });
+    return app;
 }
 
-module.exports = app;
+module.exports = start();

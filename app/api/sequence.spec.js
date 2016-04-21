@@ -1,13 +1,12 @@
 var expect = require('expect.js');
 var request = require('supertest');
-
+require('../db/init');
 
 describe('/api/v1/sequence', function () {
     // NB: Calling `request(URL)` can be used to test a remote URL, for platform tests.
     // Here we test the app directly so that the tests will run on a remote server we don't know the address or port of.
     var app = require('../../index');
     var AUTH_TOKEN = 'f379e7a023616300b75552626dbd171b7db7438f';
-
 
     function login(done) {
         var oneHourFromNow = new Date();
@@ -26,11 +25,7 @@ describe('/api/v1/sequence', function () {
     }
 
     before(done => {
-        require('../db/init')(_db => {
-            // Refresh database object.
-            db = _db;
-            login(done);
-        });
+        login(done);
     });
 
     function getAuthorized(path) {
@@ -61,10 +56,7 @@ describe('/api/v1/sequence', function () {
 
         it('should be sortable by text content', function (done) {
 
-            var expected = [];
-
-            getAuthorized('/api/v1/sequence?sort=content').expect(function (req, res) {
-
+            function bodyToBeSorted(req, res) {
                 var expectations = [
                     "acgtaatgat",
                     "acgtagtgctagcatgat",
@@ -74,7 +66,10 @@ describe('/api/v1/sequence', function () {
                     console.log('expected', expected);
                     expect(req.body[index].content).to.equal(expected);
                 })
-            })
+            }
+
+            getAuthorized('/api/v1/sequence?sort=content')
+                .expect(bodyToBeSorted)
                 .expect(200, done)
         });
 
