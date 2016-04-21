@@ -47,56 +47,15 @@ describe('/api/v1/sequence', function () {
 
         it('should return all sequences for a user', function (done) {
 
-            var expected = [
-                // The following have been shared with the user.
-                {
-                    id: 4,
-                    content: 'acgtattttttttttaaa',
-                    author_id: 2,
-                    ispublic: false,
-                    sharedBy: {
-                        first_name: 'Bob',
-                        last_name: 'Roberts',
-                        email: 'bob@biomatters.com'
-                    }
-                },
-                // The following are authored by the current user.
-                {
-                    id: 2,
-                    content: 'acgtaatgat',
-                    author_id: 1,
-                    ispublic: false,
-                    sharedBy: {
-                        first_name: 'Owen',
-                        last_name: 'Bodley',
-                        email: 'owen@biomatters.com'
-                    }
-                },
-                {
-                    id: 1,
-                    content: 'acgtagtgctagcatgat',
-                    author_id: 1,
-                    ispublic: true,
-                    sharedBy: {
-                        first_name: 'Owen',
-                        last_name: 'Bodley',
-                        email: 'owen@biomatters.com'
-                    }
-                },
-                {
-                    id: 3,
-                    content: 'acgtagtgctagcatgat',
-                    author_id: 1,
-                    ispublic: false,
-                    sharedBy: {
-                        first_name: 'Owen',
-                        last_name: 'Bodley',
-                        email: 'owen@biomatters.com'
-                    }
-                }
-            ];
+            var expectations = [4, 3, 2, 1];
 
-            getAuthorized('/api/v1/sequence').expect(200, expected, done);
+            getAuthorized('/api/v1/sequence')
+                .expect(function (req, res) {
+                    expectations.forEach((expected, index) => {
+                        expect(req.body[index].id).to.equal(expected);
+                    })
+                })
+                .expect(200, done);
 
         });
 
@@ -106,16 +65,16 @@ describe('/api/v1/sequence', function () {
 
             getAuthorized('/api/v1/sequence?sort=content').expect(function (req, res) {
 
-                    var expectations = [
-                        "acgtaatgat",
-                        "acgtagtgctagcatgat",
-                        "acgtagtgctagcatgat",
-                        "acgtattttttttttaaa"];
-                    expectations.forEach(function (expected, index) {
-                        console.log('expected', expected);
-                        expect(req.body[index].content).to.equal(expected);
-                    })
+                var expectations = [
+                    "acgtaatgat",
+                    "acgtagtgctagcatgat",
+                    "acgtagtgctagcatgat",
+                    "acgtattttttttttaaa"];
+                expectations.forEach(function (expected, index) {
+                    console.log('expected', expected);
+                    expect(req.body[index].content).to.equal(expected);
                 })
+            })
                 .expect(200, done)
         });
 

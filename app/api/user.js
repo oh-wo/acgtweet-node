@@ -1,46 +1,42 @@
 var express = require('express');
+var userHelper = require('./userHelper');
 var user = express(); // the sub app
 
+/**
+ * Search for a user.
+ */
 user.get('/', global.oauth.authorise(), function (req, res) {
-
-
-    db.users.findOne({id: req.user.id}, function (err, user) {
-        if (err) {
-            res.status(406).send('Could not find that user.')
-        } else {
-            delete user.password;
-            console.log('Found user:', user)
-            res.send(user);
-        }
-    });
+    var query = {
+        columns: ["first_name"],
+        term: req.query.search
+    };
+    // Only search for users if there is a search term.
+    if (query.term) {
+        userHelper.search(query)
+            .then(users=> res.send(users))
+            .catch(err => {
+                console.log('error', err)
+                res.status(406).send("Couldn't find that user")
+            })
+    } else {
+        // TODO This isn't currently called.
+        db.promise(db.users.find(users=> {
+            res.send(users)
+        }));
+    }
 });
 
+/**
+ * Update an existing user.
+ */
 user.put('/:userId', global.oauth.authorise(), function (req, res) {
     // TODO update user.
     res.send('user ' + req.params.userId + ' updated');
 });
 
-user.get('/all', global.oauth.authorise(), function (req, res) {
-    console.log('search term:', req.query.search)
-    db.users.search({
-            columns: ["first_name"],
-            term: req.query.search
-        },
-        function (err, users) {
-            if (err) {
-                res.status(500).send('Failed to get users.')
-            }
-            console.log('users', users);
-            if (users) {
-                users = users.map(user=> {
-                    delete user.password;
-                    return user;
-                })
-            }
-            res.send(users);
-        })
-});
-
+/**
+ * Create a new user.
+ */
 user.post('/', function (req, res) {
     if (!req.body) {
         return res.status(500).send('No data received.');

@@ -7,8 +7,7 @@ describe('/api/v1/users', function () {
     // Here we test the app directly so that the tests will run on a remote server we don't know the address or port of.
     var app = require('../../index');
     var AUTH_TOKEN = 'f379e7a023616300b75552626dbd171b7db7438f';
-
-
+    
     function login(done) {
         var oneHourFromNow = new Date();
         oneHourFromNow.setHours(oneHourFromNow.getHours() + 1);
@@ -39,22 +38,18 @@ describe('/api/v1/users', function () {
             .set('Authorization', 'Bearer ' + AUTH_TOKEN);
     }
 
-    describe('/all', function () {
+    describe('?search=firstName', function () {
+        it('should return users with matching names', function (done) {
+            var tests = [
+                {name: 'owen', email: 'owen@biomatters.com'},
+                {name: 'bob', email: 'bob@biomatters.com'}];
 
-        it('should return a list of all the current users', function (done) {
-            function correctData(req, res) {
-                var expectations = [
-                    "owen@biomatters.com",
-                    "bob@biomatters.com"];
-                expectations.forEach(function (expected, index) {
-                    console.log('expected', expected);
-                    expect(req.body[index].first_name).to.equal(expected);
-                })
-            }
-
-            getAuthorized('/api/v1/users/all')
-                .expect(correctData)
-                .expect(200, done);
+            tests.forEach(test => {
+                getAuthorized('/api/v1/user/all?search=' + test.name)
+                    .expect((req, res) =>expect(req.body[0].email).to.equal(test.email))
+                    .expect(200);
+            });
+            done();
         })
     })
 });
