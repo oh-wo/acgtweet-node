@@ -15,3 +15,6 @@
 ## useful psql commands
 - `\list` list all databases
 - `\dt`   list all tables in the current database
+
+## Heroku debugging
+- `heroku pg:psql --app acgtweet-node` connect to psql remotely.

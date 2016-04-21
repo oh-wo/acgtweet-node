@@ -58,7 +58,10 @@ sequence.post('/', function (req, res) {
  */
 sequence.get('/:sequenceId/share/', function (req, res) {
     db.promise(done => db.getUsersSharedWithSequence(req.params.sequenceId, done))
-        .then(users => res.send(users))
+        .then(users => res.send(users.map(function (user) {
+            delete user.password;
+            return user;
+        })))
         .catch(error => res.status(500).send('Failed to get users for that sequence.'))
 });
 
