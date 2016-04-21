@@ -19,7 +19,6 @@ describe('/api/v1/users', function () {
             refresh_token_expires_on: oneHourFromNow,
             user_id: 1
         }, function (error, result) {
-            console.log('err:', error)
             done();
         });
     }

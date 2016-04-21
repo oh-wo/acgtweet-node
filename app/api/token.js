@@ -12,26 +12,20 @@ global.oauth = new oauthServer({
     refreshTokenLifetime: oneYear
 });
 
-
-/**
- * Handle errors.
- */
-token.use(function logErrors(err, req, res, next) {
-    console.error('error handled:', err.stack);
-    next(err);
-});
-
 token.post('/', oauth.grant());
 
 token.delete('/', () => {
     // db.oauth_tokens.destroy({})
 });
 
-// token.use(function (err, req, res, next) {
-//     // Pass on to the next handler if exists.
-//     if (!err) return next();
-//     res.status(err.code).send(err.message);
-// });
+/**
+ * Handle errors.
+ */
+token.use(function logErrors(err, req, res, next) {
+    console.error('error handled:', err.stack);
+    if (!err) return next();
+    res.status(err.code).send(err.message);
+});
 
 module.exports = token;
 

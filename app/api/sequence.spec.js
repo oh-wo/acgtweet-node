@@ -19,7 +19,6 @@ describe('/api/v1/sequence', function () {
             refresh_token_expires_on: oneHourFromNow,
             user_id: 1
         }, function (error, result) {
-            console.log('err:', error)
             done();
         });
     }
@@ -63,7 +62,6 @@ describe('/api/v1/sequence', function () {
                     "acgtagtgctagcatgat",
                     "acgtattttttttttaaa"];
                 expectations.forEach(function (expected, index) {
-                    console.log('expected', expected);
                     expect(req.body[index].content).to.equal(expected);
                 })
             }

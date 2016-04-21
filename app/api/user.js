@@ -45,7 +45,7 @@ user.post('/', function (req, res) {
         return res.status(500).send('Please give a valid email address.');
     }
     if (!req.body.password) {
-        return res.status(500).send('Please give a valid email address.');
+        return res.status(500).send('Please supply a password.');
     }
 
     db.users.save({email: req.body.email, password: req.body.password}, function (err, inserted) {
