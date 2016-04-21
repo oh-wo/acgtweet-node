@@ -29,7 +29,9 @@ sequence.get('/', function (req, res) {
                 organised = sequenceHelper.sort(organised, req.query.sort);
             }
             res.send(organised);
-        });
+        }).catch(err=> {
+        res.status(500).send("Couldn't get that data!")
+    })
 });
 
 sequence.post('/', function (req, res) {

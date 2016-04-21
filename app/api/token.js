@@ -13,10 +13,23 @@ global.oauth = new oauthServer({
 });
 
 // Login by getting an access token.
+
+token.use(function logErrors(err, req, res, next) {
+    console.error('error handled:', err.stack);
+    next(err);
+});
+
 token.post('/', oauth.grant());
 
 // TODO Implement the delete method to log out.
 token.delete('/', oauth.grant());
+
+
+token.use(function (err, req, res, next) {
+    if (!err) return next(); // you also need this line
+
+    res.status(err.code).send(err.message);
+});
 
 module.exports = token;
 

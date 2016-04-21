@@ -13,16 +13,15 @@ module.exports = {
         // Remove the minus sign if exists.
         var trimmed = field.replace('-', '');
 
-        // Each field needs to be sorted differently.
-        var sorters = {
-            id: function (a, b) {
-                return descending ? a.id > b.id : a.id < b.id;
-            },
-            content: function (a, b) {
-                return descending ? a.content.localeCompare(b) : b.content.localeCompare(a)
+        return data.sort(function (a, b) {
+            var A = a[trimmed];
+            var B = b[trimmed];
+            // Take strings to lowercase to help out.
+            if (typeof A === 'string') {
+                A = A.toLowerCase();
+                B = B.toLowerCase();
             }
-        };
-
-        return data.sort(sorters[trimmed]);
+            return descending ? A > B : A < B;
+        });
     }
-}
+};

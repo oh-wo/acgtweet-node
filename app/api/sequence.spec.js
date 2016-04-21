@@ -1,7 +1,7 @@
 // TODO Consider extending with chai or Expect.js
 // expect seems to be very similar to jasmine.
 // @see http://webapplog.com/tdd/
-
+var expect = require('expect.js');
 var request = require('supertest');
 
 
@@ -36,8 +36,8 @@ describe('/api/v1/sequence', function () {
         });
     });
 
-    function getSequencesAuthorized() {
-        return request(app).get('/api/v1/sequence')
+    function getAuthorized(path) {
+        return request(app).get(path)
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + AUTH_TOKEN);
     }
@@ -45,7 +45,7 @@ describe('/api/v1/sequence', function () {
     describe('GET /sequence', function () {
         it('should require an access token', function (done) {
             request(app).get('/api/v1/sequence').expect(500);
-            getSequencesAuthorized().expect(200, done);
+            getAuthorized('/api/v1/sequence').expect(200, done);
         });
 
         it('should return all sequences for a user', function (done) {
@@ -99,8 +99,31 @@ describe('/api/v1/sequence', function () {
                 }
             ];
 
-            getSequencesAuthorized().expect(200, expected, done);
+            getAuthorized('/api/v1/sequence').expect(200, expected, done);
 
-        })
+        });
+
+        it('should be sortable by text content', function (done) {
+
+            var expected = [];
+
+            getAuthorized('/api/v1/sequence?sort=content')
+                .expect(function (req, res) {
+
+                    var expectations = [
+                        "acgtaatgat",
+                        "acgtagtgctagcatgat",
+                        "acgtagtgctagcatgat",
+                        "acgtattttttttttaaa",
+                        "test"];
+                    expectations.forEach(function (expected, index) {
+                        console.log('expected', expected);
+                        expect(req.body[index].content).to.equal(expected);
+                    })
+                })
+                .expect(200, done)
+        });
+
+
     });
 });
