@@ -29,6 +29,8 @@ sequence.get('/', function (req, res) {
             res.send(organised);
         })
         .catch(err=> {
+            console.log('Error getting sequences for user:')
+            console.log(err);
             res.status(500).send("Couldn't get that data!")
         })
 });
