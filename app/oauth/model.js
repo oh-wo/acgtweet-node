@@ -45,7 +45,6 @@ module.exports = {
      */
     getUser: function (email, password, done) {
         db.users.findOne({email: email, password: password}, function (err, user) {
-            console.log('getUser:', user);
             done(err, user);
         });
     },
@@ -54,7 +53,6 @@ module.exports = {
      * Save token.
      */
     saveAccessToken: function (accessToken, clientId, expires, user, done) {
-        console.log('saveAccessToken called', accessToken, clientId, expires, user);
         db.oauth_tokens.insert({
             access_token: accessToken,
             access_token_expires_on: expires,

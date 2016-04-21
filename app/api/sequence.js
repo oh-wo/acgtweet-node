@@ -6,8 +6,6 @@ var sequenceHelper = require('./sequenceHelper');
  * Get all sequences for this user.
  */
 sequence.get('/', function (req, res) {
-    console.log('userid', req.user.id)
-
     // Get sequences shared with this user.
     db.promise(done => db.mineAndTheirs([req.user.id], done))
         .then(all => {
@@ -35,8 +33,6 @@ sequence.get('/', function (req, res) {
 });
 
 sequence.post('/', function (req, res) {
-    console.log('body:', req.body)
-
     db.sequences.insert({content: req.body.content, author_id: req.user.id}, function (err, sequence) {
         if (err) {
             console.log('Error saving sequence, ', err)
@@ -55,11 +51,20 @@ sequence.post('/', function (req, res) {
  * /api/v1/sequence/5/share/1
  *
  */
-sequence.post('/:sequenceId/share/:userId', function (req, res) {
-    db.sequences.find({author_id: req.user.id}, function (err, sequences) {
-        console.log('sequences:', sequences)
-        res.send(sequences)
-    });
+sequence.post('/:sequenceId/user/:userId', function (req, res) {
+    console.log(`sharing sequenceId:${req.params.sequenceId}, userId:${req.params.userId}`)
+
+    // TODO Check sequence.author_id doesnt own the sequence.
+    // TODO Check that it's not already shared with them.
+
+    db.shared_sequences.insert({
+        sequenceId: req.params.sequenceId,
+        userId: req.params.userId
+    }, function (err, result) {
+        if (!err) {
+            res.send('Saved!')
+        }
+    })
 });
 
 

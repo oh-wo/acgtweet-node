@@ -104,8 +104,7 @@ describe('/api/v1/sequence', function () {
 
             var expected = [];
 
-            getAuthorized('/api/v1/sequence?sort=content')
-                .expect(function (req, res) {
+            getAuthorized('/api/v1/sequence?sort=content').expect(function (req, res) {
 
                     var expectations = [
                         "acgtaatgat",
