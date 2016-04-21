@@ -24,7 +24,7 @@ sequence.get('/', function (req, res) {
                     }
                 }
             });
-
+            // Sort parameters are optional.
             if (req.query.sort) {
                 organised = sequenceHelper.sort(organised, req.query.sort);
             }
