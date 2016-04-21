@@ -1,6 +1,3 @@
-// TODO Consider extending with chai or Expect.js
-// expect seems to be very similar to jasmine.
-// @see http://webapplog.com/tdd/
 var expect = require('expect.js');
 var request = require('supertest');
 
@@ -114,8 +111,7 @@ describe('/api/v1/sequence', function () {
                         "acgtaatgat",
                         "acgtagtgctagcatgat",
                         "acgtagtgctagcatgat",
-                        "acgtattttttttttaaa",
-                        "test"];
+                        "acgtattttttttttaaa"];
                     expectations.forEach(function (expected, index) {
                         console.log('expected', expected);
                         expect(req.body[index].content).to.equal(expected);
